@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfólio de Product Designer Sênior — transformando complexidade em clareza através do design de produto." />
+  <title>AngeloMagalhães — Product Designer Sênior</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Google Fonts: Fraunces (editorial serif) + Inter (sans-serif limpa) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- =========================================================
+       DESIGN TOKENS + ESTILOS GLOBAIS
+       ========================================================= -->
+  <style>
+    /* ---------- Tokens de tema (claro / escuro / azul) ---------- */
+    :root {
+      --bg-color: #F8F9FA;
+      --text-color: #0F1115;
+      --accent-color: #0F1115;
+      --card-bg: #FFFFFF;
+      --border-color: rgba(15, 17, 21, 0.12);
+      --muted: rgba(15, 17, 21, 0.6);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0F1115;
+      --text-color: #F8F9FA;
+      --accent-color: #F8F9FA;
+      --card-bg: #17191F;
+      --border-color: rgba(248, 249, 250, 0.12);
+      --muted: rgba(248, 249, 250, 0.6);
+    }
+
+    [data-theme="blue"] {
+      --bg-color: #0A192F;
+      --text-color: #E6F1FF;
+      --accent-color: #64FFDA;
+      --card-bg: #112240;
+      --border-color: rgba(100, 255, 218, 0.18);
+      --muted: rgba(230, 241, 255, 0.65);
+    }
+
+    /* ---------- Base ---------- */
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Inter', system-ui, sans-serif;
+      transition: background-color .5s ease, color .5s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-editorial { font-family: 'Fraunces', 'Times New Roman', serif; font-optical-sizing: auto; }
+    .text-muted-custom { color: var(--muted); }
+    .border-custom { border-color: var(--border-color); }
+    .bg-card { background-color: var(--card-bg); }
+    .text-accent { color: var(--accent-color); }
+
+    /* ---------- Navbar com glassmorphism ---------- */
+    .nav-glass {
+      background-color: color-mix(in srgb, var(--bg-color) 70%, transparent);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ---------- Marquee infinito ---------- */
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 40s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ---------- Scroll reveal ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ---------- Hero retrato ---------- */
+    .portrait-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    .portrait-frame::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--bg-color) 40%, transparent));
+      pointer-events: none;
+    }
+
+    /* ---------- Cases ---------- */
+    .case-card { transition: transform .5s ease, background-color .5s ease; }
+    .case-card:hover { transform: translateY(-4px); }
+    .case-img { transition: transform .8s ease, filter .5s ease; filter: grayscale(25%); }
+    .case-card:hover .case-img { transform: scale(1.04); filter: grayscale(0%); }
+
+    /* ---------- Botões ---------- */
+    .btn-primary {
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: .9; }
+
+    .btn-ghost {
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      transition: background-color .3s ease, transform .3s ease;
+    }
+    .btn-ghost:hover { background-color: var(--card-bg); transform: translateY(-2px); }
+
+    /* ---------- Modal ---------- */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s ease;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      max-width: 880px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      transform: translateY(24px) scale(.98);
+      transition: transform .4s cubic-bezier(.2,.7,.2,1);
+      border: 1px solid var(--border-color);
+    }
+    .modal-overlay.open .modal-content { transform: translateY(0) scale(1); }
+
+    /* ---------- Ferramentas ---------- */
+    .tool-chip {
+      border: 1px solid var(--border-color);
+      transition: transform .3s ease, background-color .3s ease, color .3s ease;
+    }
+    .tool-chip:hover {
+      transform: translateY(-3px);
+      background-color: var(--text-color);
+      color: var(--bg-color);
+    }
+
+    /* ---------- Contador ---------- */
+    .counter-num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ---------- Seletores de tema ---------- */
+    .theme-dot {
+      width: 22px; height: 22px; border-radius: 999px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .theme-dot:hover { transform: scale(1.12); }
+    .theme-dot.active { box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 3px var(--text-color); }
+
+    /* ---------- Scrollbar discreta ---------- */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+    /* ---------- Mobile menu ---------- */
+    .mobile-menu {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .mobile-menu.open { max-height: 400px; }
+
+    /* ---------- Linhas editoriais ---------- */
+    .editorial-rule { height: 1px; background-color: var(--border-color); }
+
+    /* ---------- Toast ---------- */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translate(-50%, 20px);
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      padding: .75rem 1.25rem;
+      border-radius: 999px;
+      font-size: .875rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  </style>
+</head>
+
+<body data-theme="light">
+
+  <!-- =========================================================
+       NAVBAR FIXA COM GLASSMORPHISM
+       ========================================================= -->
+  <header class="nav-glass fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
+      <!-- Marca -->
+      <a href="#top" class="font-editorial text-xl md:text-2xl tracking-tight">
+        Angelo<span class="italic font-light">Magalhães</span><span class="text-accent">.</span>
+      </a>
+
+      <!-- Navegação central (desktop) -->
+      <nav class="hidden md:flex items-center gap-8 text-sm">
+        <a href="#cases"     data-i18n="nav.cases"     class="hover:opacity-60 transition">Cases</a>
+        <a href="#sobre"     data-i18n="nav.about"     class="hover:opacity-60 transition">Sobre</a>
+        <a href="#conteudos" data-i18n="nav.writing"   class="hover:opacity-60 transition">Conteúdos</a>
+        <a href="#contato"   data-i18n="nav.contact"   class="hover:opacity-60 transition">Contato</a>
+      </nav>
+
+      <!-- Ações: tema + idioma -->
+      <div class="flex items-center gap-3">
+        <!-- Seletor de tema -->
+        <div class="hidden sm:flex items-center gap-2" aria-label="Seletor de tema">
+          <button class="theme-dot active" data-theme-btn="light" style="background:#F8F9FA" aria-label="Tema claro" title="Claro"></button>
+          <button class="theme-dot" data-theme-btn="dark"  style="background:#0F1115" aria-label="Tema escuro" title="Escuro"></button>
+          <button class="theme-dot" data-theme-btn="blue"  style="background:#0A192F" aria-label="Tema azul" title="Azul"></button>
+        </div>
+
+        <!-- Alternador de idioma -->
+        <button id="langToggle" class="btn-ghost px-3 py-1.5 rounded-full text-xs tracking-widest uppercase">
+          <span id="langLabel">EN</span>
+        </button>
+
+        <!-- Menu mobile -->
+        <button id="menuBtn" class="md:hidden p-2" aria-label="Abrir menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu mobile expansível -->
+    <div id="mobileMenu" class="mobile-menu md:hidden border-t border-custom">
+      <nav class="flex flex-col px-5 py-4 gap-4 text-sm">
+        <a href="#cases"     data-i18n="nav.cases"   class="py-1">Cases</a>
+        <a href="#sobre"     data-i18n="nav.about"   class="py-1">Sobre</a>
+        <a href="#conteudos" data-i18n="nav.writing" class="py-1">Conteúdos</a>
+        <a href="#contato"   data-i18n="nav.contact" class="py-1">Contato</a>
+        <!-- Seletor de tema mobile -->
+        <div class="flex items-center gap-3 pt-2 border-t border-custom">
+          <span class="text-xs uppercase tracking-widest text-muted-custom">Tema</span>
+          <button class="theme-dot active" data-theme-btn="light" style="background:#F8F9FA"></button>
+          <button class="theme-dot" data-theme-btn="dark"  style="background:#0F1115"></button>
+          <button class="theme-dot" data-theme-btn="blue"  style="background:#0A192F"></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- =========================================================
+         HERO SECTION
+         ========================================================= -->
+    <section class="pt-36 md:pt-48 pb-20 md:pb-32 px-5 md:px-10">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-10 md:gap-16 items-center">
+
+        <!-- Texto -->
+        <div class="md:col-span-7 reveal">
+          <p class="text-xs uppercase tracking-[0.3em] text-muted-custom mb-6">
+            <span data-i18n="hero.eyebrow">Product Designer Sênior · São Paulo, BR</span>
+          </p>
+
+          <h1 class="font-editorial text-4xl sm:text-5xl md:text-7xl leading-[1.02] tracking-tight mb-8">
+            <span data-i18n="hero.title1">Transformo</span>
+            <span class="italic font-light" data-i18n="hero.title2">complexidade</span>
+            <span data-i18n="hero.title3">em clareza através do design de produto.</span>
+          </h1>
+
+          <p class="text-base md:text-lg max-w-xl leading-relaxed text-muted-custom mb-10" data-i18n="hero.subtitle">
+            Atuo na intersecção entre experiência do usuário, estratégia de negócio e métricas. Lidero times, orquestro discovery e construo sistemas que escalam.
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <a href="#cases" class="btn-primary px-6 py-3 rounded-full text-sm tracking-wide" data-i18n="hero.cta1">Ver cases selecionados</a>
+            <a href="#contato" class="btn-ghost px-6 py-3 rounded-full text-sm tracking-wide" data-i18n="hero.cta2">Iniciar conversa</a>
+          </div>
+        </div>
+
+        <!-- Retrato -->
+        <div class="md:col-span-5 reveal">
+          <div class="portrait-frame aspect-[4/5] w-full">
+            <!-- TROCAR: substituir src por "imagens/perfil.jpg" -->
+            <img
+              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&q=80"
+              alt="Retrato de AngeloMagalhães"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="flex items-center justify-between mt-4 text-xs uppercase tracking-widest text-muted-custom">
+            <span>01 / Portrait</span>
+            <span>2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MARQUEE INFINITO
+         ========================================================= -->
+    <section class="border-y border-custom py-6 overflow-hidden" aria-hidden="true">
+      <div class="marquee-track font-editorial text-2xl md:text-4xl tracking-tight">
+        <div class="flex items-center gap-12 px-6 whitespace-nowrap">
+          <span>Design Systems</span><span class="text-accent">•</span>
+          <span>Discovery</span><span class="text-accent">•</span>
+          <span>Estratégia de Produto</span><span class="text-accent">•</span>
+          <span>UX Research</span><span class="text-accent">•</span>
+          <span>Liderança</span><span class="text-accent">•</span>
+          <span>Escalabilidade</span><span class="text-accent">•</span>
+          <span class="italic font-light">Product Thinking</span><span class="text-accent">•</span>
+          <span>Métricas</span><span class="text-accent">•</span>
+        </div>
+        <!-- Duplicado para loop contínuo sem engasgo -->
+        <div class="flex items-center gap-12 px-6 whitespace-nowrap">
+          <span>Design Systems</span><span class="text-accent">•</span>
+          <span>Discovery</span><span class="text-accent">•</span>
+          <span>Estratégia de Produto</span><span class="text-accent">•</span>
+          <span>UX Research</span><span class="text-accent">•</span>
+          <span>Liderança</span><span class="text-accent">•</span>
+          <span>Escalabilidade</span><span class="text-accent">•</span>
+          <span class="italic font-light">Product Thinking</span><span class="text-accent">•</span>
+          <span>Métricas</span><span class="text-accent">•</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MÉTRICAS / AUTORIDADE
+         ========================================================= -->
+    <section class="py-20 md:py-28 px-5 md:px-10 border-b border-custom">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10 md:gap-6">
+
+        <div class="reveal">
+          <div class="font-editorial text-6xl md:text-8xl tracking-tight counter-num" data-count="10" data-prefix="+">+0</div>
+          <div class="editorial-rule my-5"></div>
+          <p class="text-sm uppercase tracking-widest text-muted-custom" data-i18n="metrics.01">Anos de experiência</p>
+        </div>
+
+        <div class="reveal">
+          <div class="font-editorial text-6xl md:text-8xl tracking-tight counter-num" data-count="40" data-prefix="+">+0</div>
+          <div class="editorial-rule my-5"></div>
+          <p class="text-sm uppercase tracking-widest text-muted-custom" data-i18n="metrics.02">Produtos lançados</p>
+        </div>
+
+        <div class="reveal">
+          <div class="font-editorial text-6xl md:text-8xl tracking-tight counter-num" data-count="150" data-prefix="+">+0</div>
+          <div class="editorial-rule my-5"></div>
+          <p class="text-sm uppercase tracking-widest text-muted-custom" data-i18n="metrics.03">Designers mentorados</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CASES SELECIONADOS
+         ========================================================= -->
+    <section id="cases" class="py-20 md:py-28 px-5 md:px-10 border-b border-custom">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Cabeçalho da seção -->
+        <div class="flex items-end justify-between mb-16 reveal">
+          <div>
+            <p class="text-xs uppercase tracking-[0.3em] text-muted-custom mb-3" data-i18n="cases.eyebrow">Trabalhos selecionados</p>
+            <h2 class="font-editorial text-4xl md:text-6xl tracking-tight" data-i18n="cases.title">Cases recentes</h2>
+          </div>
+          <span class="hidden md:block font-editorial text-2xl italic text-muted-custom">04 / ∞</span>
+        </div>
+
+        <!-- Lista de cases -->
+        <div class="space-y-16 md:space-y-24">
+
+          <!-- CASE 01 -->
+          <article class="case-card grid md:grid-cols-12 gap-8 md:gap-12 reveal" data-case="1">
+            <div class="md:col-span-2">
+              <span class="font-editorial text-5xl md:text-7xl tracking-tight">01</span>
+            </div>
+            <div class="md:col-span-5">
+              <p class="text-xs uppercase tracking-widest text-muted-custom mb-2">Nubank · 2024</p>
+              <h3 class="font-editorial text-3xl md:text-4xl leading-tight mb-4" data-i18n="case1.title">Redesign do fluxo de investimentos para alta renda</h3>
+              <p class="text-muted-custom leading-relaxed mb-5" data-i18n="case1.desc">Liderança de discovery e construção de um novo fluxo que elevou a conversão em 38% e reduziu o tempo de decisão pela metade.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="tool-chip px-3 py-1 rounded-full text-xs" data-i18n="tag.ds">Design System</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Fintech</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">App</span>
+              </div>
+              <button class="btn-ghost px-5 py-2.5 rounded-full text-sm inline-flex items-center gap-2 open-modal" data-modal="1">
+                <span data-i18n="case.view">Ver case</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="md:col-span-5">
+              <!-- TROCAR: substituir src por "imagens/case1.jpg" -->
+              <div class="aspect-[4/3] overflow-hidden rounded-sm">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80" class="case-img w-full h-full object-cover" alt="Case 01" />
+              </div>
+            </div>
+          </article>
+
+          <!-- CASE 02 -->
+          <article class="case-card grid md:grid-cols-12 gap-8 md:gap-12 reveal" data-case="2">
+            <div class="md:col-span-2">
+              <span class="font-editorial text-5xl md:text-7xl tracking-tight">02</span>
+            </div>
+            <div class="md:col-span-5">
+              <p class="text-xs uppercase tracking-widest text-muted-custom mb-2">iFood · 2023</p>
+              <h3 class="font-editorial text-3xl md:text-4xl leading-tight mb-4" data-i18n="case2.title">Sistema de design unificado para operações</h3>
+              <p class="text-muted-custom leading-relaxed mb-5" data-i18n="case2.desc">Criação de um design system que conectou 7 produtos internos, reduzindo em 60% o tempo de entrega de novas features.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Design System</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">B2B</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Escala</span>
+              </div>
+              <button class="btn-ghost px-5 py-2.5 rounded-full text-sm inline-flex items-center gap-2 open-modal" data-modal="2">
+                <span data-i18n="case.view">Ver case</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="md:col-span-5">
+              <!-- TROCAR: substituir src por "imagens/case2.jpg" -->
+              <div class="aspect-[4/3] overflow-hidden rounded-sm">
+                <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1200&q=80" class="case-img w-full h-full object-cover" alt="Case 02" />
+              </div>
+            </div>
+          </article>
+
+          <!-- CASE 03 -->
+          <article class="case-card grid md:grid-cols-12 gap-8 md:gap-12 reveal" data-case="3">
+            <div class="md:col-span-2">
+              <span class="font-editorial text-5xl md:text-7xl tracking-tight">03</span>
+            </div>
+            <div class="md:col-span-5">
+              <p class="text-xs uppercase tracking-widest text-muted-custom mb-2">Natura · 2022</p>
+              <h3 class="font-editorial text-3xl md:text-4xl leading-tight mb-4" data-i18n="case3.title">Jornada consultora digital omnichannel</h3>
+              <p class="text-muted-custom leading-relaxed mb-5" data-i18n="case3.desc">Orquestração de uma jornada que integrou app, WhatsApp e ponto físico, elevando o NPS em 22 pontos.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Omnichannel</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Research</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Varejo</span>
+              </div>
+              <button class="btn-ghost px-5 py-2.5 rounded-full text-sm inline-flex items-center gap-2 open-modal" data-modal="3">
+                <span data-i18n="case.view">Ver case</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="md:col-span-5">
+              <!-- TROCAR: substituir src por "imagens/case3.jpg" -->
+              <div class="aspect-[4/3] overflow-hidden rounded-sm">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80" class="case-img w-full h-full object-cover" alt="Case 03" />
+              </div>
+            </div>
+          </article>
+
+          <!-- CASE 04 -->
+          <article class="case-card grid md:grid-cols-12 gap-8 md:gap-12 reveal" data-case="4">
+            <div class="md:col-span-2">
+              <span class="font-editorial text-5xl md:text-7xl tracking-tight">04</span>
+            </div>
+            <div class="md:col-span-5">
+              <p class="text-xs uppercase tracking-widest text-muted-custom mb-2">QuintoAndar · 2021</p>
+              <h3 class="font-editorial text-3xl md:text-4xl leading-tight mb-4" data-i18n="case4.title">Plataforma de gestão para proprietários</h3>
+              <p class="text-muted-custom leading-relaxed mb-5" data-i18n="case4.desc">Redesenho end-to-end de uma plataforma B2B que triplicou a retenção de proprietários no primeiro ano.</p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">B2B</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">PropTech</span>
+                <span class="tool-chip px-3 py-1 rounded-full text-xs">Dashboard</span>
+              </div>
+              <button class="btn-ghost px-5 py-2.5 rounded-full text-sm inline-flex items-center gap-2 open-modal" data-modal="4">
+                <span data-i18n="case.view">Ver case</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="md:col-span-5">
+              <!-- TROCAR: substituir src por "imagens/case4.jpg" -->
+              <div class="aspect-[4/3] overflow-hidden rounded-sm">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80" class="case-img w-full h-full object-cover" alt="Case 04" />
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PILARES DE ATUAÇÃO (SOBRE)
+         ========================================================= -->
+    <section id="sobre" class="py-20 md:py-28 px-5 md:px-10 border-b border-custom">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="grid md:grid-cols-12 gap-10 mb-16 reveal">
+          <div class="md:col-span-5">
+            <p class="text-xs uppercase tracking-[0.3em] text-muted-custom mb-3" data-i18n="pillars.eyebrow">Sobre a prática</p>
+            <h2 class="font-editorial text-4xl md:text-6xl tracking-tight" data-i18n="pillars.title">Três pilares, uma prática.</h2>
+          </div>
+          <div class="md:col-span-6 md:col-start-7 flex items-end">
+            <p class="text-muted-custom leading-relaxed" data-i18n="pillars.intro">
+              Minha atuação é estruturada em três movimentos que se retroalimentam: entender o problema em profundidade, desenhar a estratégia certa e construir sistemas que sustentem o crescimento.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 md:gap-10">
+
+          <div class="reveal">
+            <span class="font-editorial text-5xl text-accent">01</span>
+            <div class="editorial-rule my-5"></div>
+            <h3 class="font-editorial text-2xl mb-3" data-i18n="pillar1.title">Orquestração de Produto</h3>
+            <p class="text-muted-custom leading-relaxed text-sm" data-i18n="pillar1.desc">
+              Alinho visão de negócio, necessidades de usuários e capacidades técnicas. Traduzo estratégia em roadmaps executáveis e decisões de design fundamentadas.
+            </p>
+          </div>
+
+          <div class="reveal">
+            <span class="font-editorial text-5xl text-accent">02</span>
+            <div class="editorial-rule my-5"></div>
+            <h3 class="font-editorial text-2xl mb-3" data-i18n="pillar2.title">Discovery End-to-End</h3>
+            <p class="text-muted-custom leading-relaxed text-sm" data-i18n="pillar2.desc">
+              Conduzo pesquisas qualitativas e quantitativas, mapeio oportunidades, testo hipóteses e transformo aprendizados em direção clara para o time.
+            </p>
+          </div>
+
+          <div class="reveal">
+            <span class="font-editorial text-5xl text-accent">03</span>
+            <div class="editorial-rule my-5"></div>
+            <h3 class="font-editorial text-2xl mb-3" data-i18n="pillar3.title">Sistemas e Escala</h3>
+            <p class="text-muted-custom leading-relaxed text-sm" data-i18n="pillar3.desc">
+              Construo e evoluo design systems que aceleram times, garantem consistência e permitem que o produto cresça sem perder coerência.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         FERRAMENTAS / STACK
+         ========================================================= -->
+    <section id="conteudos" class="py-20 md:py-24 px-5 md:px-10 border-b border-custom">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-10 reveal">
+          <div>
+            <p class="text-xs uppercase tracking-[0.3em] text-muted-custom mb-3" data-i18n="tools.eyebrow">Stack & ferramentas</p>
+            <h2 class="font-editorial text-3xl md:text-5xl tracking-tight" data-i18n="tools.title">O que uso no dia a dia</h2>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 reveal">
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Figma</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Cursor</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">ChatGPT</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Claude</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Notion</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Jira</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Maze</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Dovetail</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Linear</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Miro</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">Framer</span>
+          <span class="tool-chip px-5 py-3 rounded-full text-sm">v0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         RODAPÉ / CONTATO
+         ========================================================= -->
+    <footer id="contato" class="py-20 md:py-32 px-5 md:px-10">
+      <div class="max-w-7xl mx-auto">
+
+        <div class="reveal">
+          <p class="text-xs uppercase tracking-[0.3em] text-muted-custom mb-6" data-i18n="footer.eyebrow">Vamos conversar?</p>
+          <h2 class="font-editorial text-5xl md:text-8xl tracking-tight leading-[0.95] mb-10">
+            <span data-i18n="footer.title1">Aberto a novos</span><br/>
+            <span class="italic font-light" data-i18n="footer.title2">projetos e parcerias.</span>
+          </h2>
+
+          <div class="flex flex-wrap items-center gap-4 mb-14">
+            <button id="copyEmail" class="btn-primary px-6 py-3 rounded-full text-sm inline-flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              <span>angelo@magalhaes.design</span>
+            </button>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="btn-ghost px-6 py-3 rounded-full text-sm inline-flex items-center gap-2">
+              <i data-lucide="linkedin" class="w-4 h-4"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://medium.com" target="_blank" rel="noopener" class="btn-ghost px-6 py-3 rounded-full text-sm inline-flex items-center gap-2">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              <span>Medium</span>
+            </a>
+            <a href="https://substack.com" target="_blank" rel="noopener" class="btn-ghost px-6 py-3 rounded-full text-sm inline-flex items-center gap-2">
+              <i data-lucide="newspaper" class="w-4 h-4"></i>
+              <span>Substack</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Linha editorial -->
+        <div class="editorial-rule mb-8"></div>
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs uppercase tracking-widest text-muted-custom">
+          <p>© 2026 AngeloMagalhães — <span data-i18n="footer.rights">Todos os direitos reservados</span></p>
+          <div class="flex items-center gap-6">
+            <span data-i18n="footer.made">Feito com cuidado em São Paulo</span>
+            <button id="toTop" class="inline-flex items-center gap-2 hover:opacity-70 transition">
+              <span data-i18n="footer.top">Voltar ao topo</span>
+              <i data-lucide="arrow-up" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- =========================================================
+       MODAL DE CASES
+       ========================================================= -->
+  <div id="caseModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content rounded-sm">
+      <div class="sticky top-0 bg-card border-b border-custom px-6 py-4 flex items-center justify-between">
+        <span id="modalLabel" class="text-xs uppercase tracking-widest text-muted-custom">Case 01</span>
+        <button id="closeModal" class="p-2 hover:opacity-60 transition" aria-label="Fechar">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6 md:p-10">
+        <p id="modalCompany" class="text-xs uppercase tracking-widest text-muted-custom mb-3">Empresa · Ano</p>
+        <h3 id="modalTitle" class="font-editorial text-3xl md:text-5xl tracking-tight mb-6 leading-tight"></h3>
+        <div class="grid md:grid-cols-3 gap-8 mb-8">
+          <div>
+            <p class="text-xs uppercase tracking-widest text-muted-custom mb-2" data-i18n="modal.role">Papel</p>
+            <p id="modalRole" class="text-sm leading-relaxed"></p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-widest text-muted-custom mb-2" data-i18n="modal.duration">Duração</p>
+            <p id="modalDuration" class="text-sm leading-relaxed"></p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-widest text-muted-custom mb-2" data-i18n="modal.impact">Impacto</p>
+            <p id="modalImpact" class="text-sm leading-relaxed"></p>
+          </div>
+        </div>
+        <div class="editorial-rule my-8"></div>
+        <h4 class="font-editorial text-xl mb-3" data-i18n="modal.context">Contexto & desafio</h4>
+        <p id="modalContext" class="text-muted-custom leading-relaxed mb-8"></p>
+
+        <h4 class="font-editorial text-xl mb-3" data-i18n="modal.approach">Abordagem</h4>
+        <p id="modalApproach" class="text-muted-custom leading-relaxed mb-8"></p>
+
+        <h4 class="font-editorial text-xl mb-3" data-i18n="modal.outcomes">Resultados</h4>
+        <ul id="modalOutcomes" class="space-y-2 text-muted-custom"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de feedback -->
+  <div id="toast" class="toast" role="status" aria-live="polite">E-mail copiado!</div>
+
+  <!-- =========================================================
+       SCRIPTS
+       ========================================================= -->
+  <script>
+    /* ---------------------------------------------------------
+       1) Inicializa ícones Lucide
+       --------------------------------------------------------- */
+    lucide.createIcons();
+
+    /* ---------------------------------------------------------
+       2) Dicionário de traduções PT / EN
+       --------------------------------------------------------- */
+    const translations = {
+      pt: {
+        "nav.cases": "Cases",
+        "nav.about": "Sobre",
+        "nav.writing": "Conteúdos",
+        "nav.contact": "Contato",
+
+        "hero.eyebrow": "Product Designer Sênior · São Paulo, BR",
+        "hero.title1": "Transformo ",
+        "hero.title2": "complexidade",
+        "hero.title3": " em clareza através do design de produto.",
+        "hero.subtitle": "Atuo na intersecção entre experiência do usuário, estratégia de negócio e métricas. Lidero times, orquestro discovery e construo sistemas que escalam.",
+        "hero.cta1": "Ver cases selecionados",
+        "hero.cta2": "Iniciar conversa",
+
+        "metrics.01": "Anos de experiência",
+        "metrics.02": "Produtos lançados",
+        "metrics.03": "Designers mentorados",
+
+        "cases.eyebrow": "Trabalhos selecionados",
+        "cases.title": "Cases recentes",
+        "case.view": "Ver case",
+
+        "case1.title": "Redesign do fluxo de investimentos para alta renda",
+        "case1.desc": "Liderança de discovery e construção de um novo fluxo que elevou a conversão em 38% e reduziu o tempo de decisão pela metade.",
+        "case2.title": "Sistema de design unificado para operações",
+        "case2.desc": "Criação de um design system que conectou 7 produtos internos, reduzindo em 60% o tempo de entrega de novas features.",
+        "case3.title": "Jornada consultora digital omnichannel",
+        "case3.desc": "Orquestração de uma jornada que integrou app, WhatsApp e ponto físico, elevando o NPS em 22 pontos.",
+        "case4.title": "Plataforma de gestão para proprietários",
+        "case4.desc": "Redesenho end-to-end de uma plataforma B2B que triplicou a retenção de proprietários no primeiro ano.",
+
+        "tag.ds": "Design System",
+
+        "pillars.eyebrow": "Sobre a prática",
+        "pillars.title": "Três pilares, uma prática.",
+        "pillars.intro": "Minha atuação é estruturada em três movimentos que se retroalimentam: entender o problema em profundidade, desenhar a estratégia certa e construir sistemas que sustentem o crescimento.",
+
+        "pillar1.title": "Orquestração de Produto",
+        "pillar1.desc": "Alinho visão de negócio, necessidades de usuários e capacidades técnicas. Traduzo estratégia em roadmaps executáveis e decisões de design fundamentadas.",
+        "pillar2.title": "Discovery End-to-End",
+        "pillar2.desc": "Conduzo pesquisas qualitativas e quantitativas, mapeio oportunidades, testo hipóteses e transformo aprendizados em direção clara para o time.",
+        "pillar3.title": "Sistemas e Escala",
+        "pillar3.desc": "Construo e evoluo design systems que aceleram times, garantem consistência e permitem que o produto cresça sem perder coerência.",
+
+        "tools.eyebrow": "Stack & ferramentas",
+        "tools.title": "O que uso no dia a dia",
+
+        "footer.eyebrow": "Vamos conversar?",
+        "footer.title1": "Aberto a novos",
+        "footer.title2": "projetos e parcerias.",
+        "footer.rights": "Todos os direitos reservados",
+        "footer.made": "Feito com cuidado em São Paulo",
+        "footer.top": "Voltar ao topo",
+
+        "modal.role": "Papel",
+        "modal.duration": "Duração",
+        "modal.impact": "Impacto",
+        "modal.context": "Contexto & desafio",
+        "modal.approach": "Abordagem",
+        "modal.outcomes": "Resultados"
+      },
+      en: {
+        "nav.cases": "Cases",
+        "nav.about": "About",
+        "nav.writing": "Writing",
+        "nav.contact": "Contact",
+
+        "hero.eyebrow": "Senior Product Designer · São Paulo, BR",
+        "hero.title1": "I turn ",
+        "hero.title2": "complexity",
+        "hero.title3": " into clarity through product design.",
+        "hero.subtitle": "I work at the intersection of user experience, business strategy and metrics. I lead teams, orchestrate discovery and build systems that scale.",
+        "hero.cta1": "View selected cases",
+        "hero.cta2": "Start a conversation",
+
+        "metrics.01": "Years of experience",
+        "metrics.02": "Products shipped",
+        "metrics.03": "Designers mentored",
+
+        "cases.eyebrow": "Selected work",
+        "cases.title": "Recent cases",
+        "case.view": "View case",
+
+        "case1.title": "Investment flow redesign for high-net-worth clients",
+        "case1.desc": "Led discovery and built a new flow that lifted conversion by 38% and cut decision time in half.",
+        "case2.title": "Unified design system for operations",
+        "case2.desc": "Created a design system that connected 7 internal products, cutting delivery time for new features by 60%.",
+        "case3.title": "Omnichannel digital consultant journey",
+        "case3.desc": "Orchestrated a journey integrating app, WhatsApp and physical stores, lifting NPS by 22 points.",
+        "case4.title": "Management platform for landlords",
+        "case4.desc": "End-to-end redesign of a B2B platform that tripled landlord retention in the first year.",
+
+        "tag.ds": "Design System",
+
+        "pillars.eyebrow": "About the practice",
+        "pillars.title": "Three pillars, one practice.",
+        "pillars.intro": "My work is structured around three self-reinforcing movements: deeply understanding the problem, shaping the right strategy and building systems that sustain growth.",
+
+        "pillar1.title": "Product Orchestration",
+        "pillar1.desc": "I align business vision, user needs and technical capabilities. I translate strategy into executable roadmaps and grounded design decisions.",
+        "pillar2.title": "End-to-End Discovery",
+        "pillar2.desc": "I lead qualitative and quantitative research, map opportunities, test hypotheses and turn learnings into clear direction for the team.",
+        "pillar3.title": "Systems & Scale",
+        "pillar3.desc": "I build and evolve design systems that accelerate teams, ensure consistency and let the product grow without losing coherence.",
+
+        "tools.eyebrow": "Stack & tools",
+        "tools.title": "What I use day-to-day",
+
+        "footer.eyebrow": "Let's talk?",
+        "footer.title1": "Open to new",
+        "footer.title2": "projects and partnerships.",
+        "footer.rights": "All rights reserved",
+        "footer.made": "Crafted in São Paulo",
+        "footer.top": "Back to top",
+
+        "modal.role": "Role",
+        "modal.duration": "Duration",
+        "modal.impact": "Impact",
+        "modal.context": "Context & challenge",
+        "modal.approach": "Approach",
+        "modal.outcomes": "Outcomes"
+      }
+    };
+
+    /* ---------------------------------------------------------
+       3) Alternador de idioma
+       --------------------------------------------------------- */
+    let currentLang = "pt";
+    const langToggle = document.getElementById("langToggle");
+    const langLabel  = document.getElementById("langLabel");
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+      langLabel.textContent = lang === "pt" ? "EN" : "PT";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      // Atualiza modal aberto, se houver
+      refreshModalText();
+    }
+
+    langToggle.addEventListener("click", () => {
+      applyLanguage(currentLang === "pt" ? "en" : "pt");
+    });
+
+    /* ---------------------------------------------------------
+       4) Alternador de tema
+       --------------------------------------------------------- */
+    const themeButtons = document.querySelectorAll("[data-theme-btn]");
+    themeButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const theme = btn.getAttribute("data-theme-btn");
+        document.body.setAttribute("data-theme", theme);
+        // Sincroniza estado ativo em todos os seletores (desktop + mobile)
+        themeButtons.forEach(b => b.classList.toggle("active", b.getAttribute("data-theme-btn") === theme));
+      });
+    });
+
+    /* ---------------------------------------------------------
+       5) Menu mobile
+       --------------------------------------------------------- */
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("open"));
+    // Fecha menu ao clicar em um link
+    mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => mobileMenu.classList.remove("open")));
+
+    /* ---------------------------------------------------------
+       6) Scroll reveal via Intersection Observer
+       --------------------------------------------------------- */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+    document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+
+    /* ---------------------------------------------------------
+       7) Contadores animados
+       --------------------------------------------------------- */
+    const counters = document.querySelectorAll(".counter-num");
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.count, 10);
+          const prefix = el.dataset.prefix || "";
+          let start = 0;
+          const duration = 1600;
+          const startTime = performance.now();
+
+          function tick(now) {
+            const progress = Math.min((now - startTime) / duration, 1);
+            // easing suave (easeOutCubic)
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = Math.floor(eased * target);
+            el.textContent = prefix + value;
+            if (progress < 1) requestAnimationFrame(tick);
+            else el.textContent = prefix + target;
+          }
+          requestAnimationFrame(tick);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(c => counterObserver.observe(c));
+
+    /* ---------------------------------------------------------
+       8) Dados dos cases (PT / EN)
+       --------------------------------------------------------- */
+    const casesData = {
+      1: {
+        label: { pt: "Case 01", en: "Case 01" },
+        company: { pt: "Nubank · 2024", en: "Nubank · 2024" },
+        title: { pt: "Redesign do fluxo de investimentos para alta renda", en: "Investment flow redesign for high-net-worth clients" },
+        role: { pt: "Lead Product Designer", en: "Lead Product Designer" },
+        duration: { pt: "8 meses", en: "8 months" },
+        impact: { pt: "+38% conversão", en: "+38% conversion" },
+        context: {
+          pt: "Clientes de alta renda abandonavam o fluxo de investimentos por excesso de etapas e linguagem pouco clara. O desafio era simplificar sem perder a sofisticação esperada pelo perfil.",
+          en: "High-net-worth clients were dropping off the investment flow due to excessive steps and unclear language. The challenge was to simplify without losing the sophistication the profile expects."
+        },
+        approach: {
+          pt: "Conduzi discovery com 24 entrevistas, mapeei os 6 momentos críticos da jornada e redesenhei o fluxo em 3 atos, com progressão narrativa e linguagem orientada a objetivos.",
+          en: "I led discovery with 24 interviews, mapped the 6 critical moments of the journey and redesigned the flow into 3 acts, with narrative progression and goal-oriented language."
+        },
+        outcomes: {
+          pt: ["Conversão +38%", "Tempo de decisão reduzido em 50%", "NPS do fluxo subiu de 42 para 71"],
+          en: ["Conversion +38%", "Decision time reduced by 50%", "Flow NPS rose from 42 to 71"]
+        }
+      },
+      2: {
+        label: { pt: "Case 02", en: "Case 02" },
+        company: { pt: "iFood · 2023", en: "iFood · 2023" },
+        title: { pt: "Sistema de design unificado para operações", en: "Unified design system for operations" },
+        role: { pt: "Design System Lead", en: "Design System Lead" },
+        duration: { pt: "12 meses", en: "12 months" },
+        impact: { pt: "-60% tempo de entrega", en: "-60% delivery time" },
+        context: {
+          pt: "Sete produtos internos operavam com padrões visuais e de interação distintos, gerando retrabalho e inconsistência. Era preciso criar uma base comum sem parar as entregas.",
+          en: "Seven internal products operated with distinct visual and interaction patterns, generating rework and inconsistency. A common foundation was needed without halting deliveries."
+        },
+        approach: {
+          pt: "Auditei os 7 produtos, defini tokens, componentes e padrões de interação, e criei um programa de adoção com guildas, documentação viva e métricas de saúde do sistema.",
+          en: "I audited the 7 products, defined tokens, components and interaction patterns, and created an adoption program with guilds, living documentation and system health metrics."
+        },
+        outcomes: {
+          pt: ["7 produtos migrados", "Tempo de entrega de features -60%", "Consistência visual auditável por métricas"],
+          en: ["7 products migrated", "Feature delivery time -60%", "Visual consistency auditable via metrics"]
+        }
+      },
+      3: {
+        label: { pt: "Case 03", en: "Case 03" },
+        company: { pt: "Natura · 2022", en: "Natura · 2022" },
+        title: { pt: "Jornada consultora digital omnichannel", en: "Omnichannel digital consultant journey" },
+        role: { pt: "Product Designer Sênior", en: "Senior Product Designer" },
+        duration: { pt: "10 meses", en: "10 months" },
+        impact: { pt: "+22 NPS", en: "+22 NPS" },
+        context: {
+          pt: "Consultoras viviam uma experiência fragmentada entre app, WhatsApp e revenda física. Precisávamos unificar a jornada respeitando os diferentes contextos de uso.",
+          en: "Consultants lived a fragmented experience across app, WhatsApp and physical retail. We needed to unify the journey while respecting different usage contexts."
+        },
+        approach: {
+          pt: "Shadowing com 18 consultoras, service blueprint e co-criação de rituais entre canais. Desenhei um modelo de 'fio condutor' que conecta os canais sem sobrepor tarefas.",
+          en: "Shadowing with 18 consultants, service blueprint and co-creation of rituals across channels. I designed a 'connecting thread' model that links channels without overlapping tasks."
+        },
+        outcomes: {
+          pt: ["NPS +22 pontos", "Retenção de consultoras +17%", "Redução de chamados no SAC em 30%"],
+          en: ["NPS +22 points", "Consultant retention +17%", "Support tickets reduced by 30%"]
+        }
+      },
+      4: {
+        label: { pt: "Case 04", en: "Case 04" },
+        company: { pt: "QuintoAndar · 2021", en: "QuintoAndar · 2021" },
+        title: { pt: "Plataforma de gestão para proprietários", en: "Management platform for landlords" },
+        role: { pt: "Product Designer Sênior", en: "Senior Product Designer" },
+        duration: { pt: "9 meses", en: "9 months" },
+        impact: { pt: "3× retenção", en: "3× retention" },
+        context: {
+          pt: "Proprietários abandonavam a plataforma nos primeiros 90 dias por não entenderem o valor gerado. O desafio era tornar o valor tangível desde o onboarding.",
+          en: "Landlords were leaving the platform within the first 90 days because they didn't understand the value generated. The challenge was to make value tangible from onboarding."
+        },
+        approach: {
+          pt: "Redesenhei o onboarding com 'quick wins', criei um dashboard de valor percebido e reestruturei a comunicação de repasses e ocupação com linguagem orientada a resultados.",
+          en: "I redesigned onboarding with 'quick wins', created a perceived-value dashboard and restructured transfer and occupancy communication with results-oriented language."
+        },
+        outcomes: {
+          pt: ["Retenção 90d triplicada", "Uso semanal do dashboard +80%", "Churn de proprietários -45%"],
+          en: ["90-day retention tripled", "Weekly dashboard usage +80%", "Landlord churn -45%"]
+        }
+      }
+    };
+
+    /* ---------------------------------------------------------
+       9) Modal de cases
+       --------------------------------------------------------- */
+    const modal = document.getElementById("caseModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    let currentModalId = null;
+
+    function refreshModalText() {
+      if (!currentModalId) return;
+      const data = casesData[currentModalId];
+      document.getElementById("modalLabel").textContent    = data.label[currentLang];
+      document.getElementById("modalCompany").textContent  = data.company[currentLang];
+      document.getElementById("modalTitle").textContent    = data.title[currentLang];
+      document.getElementById("modalRole").textContent     = data.role[currentLang];
+      document.getElementById("modalDuration").textContent = data.duration[currentLang];
+      document.getElementById("modalImpact").textContent   = data.impact[currentLang];
+      document.getElementById("modalContext").textContent  = data.context[currentLang];
+      document.getElementById("modalApproach").textContent = data.approach[currentLang];
+      const outcomesList = document.getElementById("modalOutcomes");
+      outcomesList.innerHTML = "";
+      data.outcomes[currentLang].forEach(item => {
+        const li = document.createElement("li");
+        li.className = "flex items-start gap-2 text-sm";
+        li.innerHTML = `<span class="text-accent mt-1">—</span><span>${item}</span>`;
+        outcomesList.appendChild(li);
+      });
+    }
+
+    function openModal(id) {
+      currentModalId = id;
+      refreshModalText();
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      currentModalId = null;
+    }
+
+    document.querySelectorAll(".open-modal").forEach(btn => {
+      btn.addEventListener("click", () => openModal(btn.dataset.modal));
+    });
+    closeModalBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+    /* ---------------------------------------------------------
+       10) Copiar e-mail + toast
+       --------------------------------------------------------- */
+    const toast = document.getElementById("toast");
+    document.getElementById("copyEmail").addEventListener("click", async () => {
+      const email = "angelo@magalhaes.design";
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = email; document.body.appendChild(ta);
+        ta.select(); document.execCommand("copy"); ta.remove();
+      }
+      toast.textContent = currentLang === "pt" ? "E-mail copiado!" : "Email copied!";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    });
+
+    /* ---------------------------------------------------------
+       11) Voltar ao topo
+       --------------------------------------------------------- */
+    document.getElementById("toTop").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
